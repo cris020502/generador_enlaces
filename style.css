@@ -1,0 +1,468 @@
+/* =========================================
+   VARIABLES GLOBALES (Colores INFRUSCH)
+   ========================================= */
+:root {
+    --primary: #00458a;       /* Azul oscuro principal del logo */
+    --primary-hover: #002d5c; /* Azul más oscuro para hover */
+    --secondary: #3b82b8;     /* Azul claro de la palabra "consultores" */
+    --secondary-hover: #2a6695;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --bg-page: #f4f7f9;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+}
+
+/* =========================================
+   ESTILOS GENERALES
+   ========================================= */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    color: var(--text-main);
+}
+
+/* =========================================
+   PANTALLA DE LOGIN (DISEÑO PREMIUM)
+   ========================================= */
+.bg-login {
+    /* Fondo con un degradado azul profundo y profesional */
+    background: linear-gradient(135deg, #00152e 0%, #00458a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 48px 40px;
+    background: #ffffff;
+    border-radius: 24px;
+    /* Sombras superpuestas para dar un efecto de "flotación" 3D */
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1);
+    text-align: center;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Detalle de color en la parte superior de la tarjeta usando los colores corporativos */
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.login-logo {
+    max-width: 140px;
+    height: auto;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+    transition: transform 0.3s ease;
+}
+.login-logo:hover {
+    transform: scale(1.05);
+}
+
+.login-container h2 {
+    color: #0f172a;
+    margin: 0 0 8px 0;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.login-container p {
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 32px;
+    line-height: 1.5;
+}
+
+.login-input {
+    width: 100%;
+    padding: 16px;
+    margin: 0 0 20px 0;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 15px;
+    color: #0f172a;
+    transition: all 0.3s ease;
+}
+.login-input::placeholder {
+    color: #94a3b8;
+}
+.login-input:focus {
+    background: #ffffff;
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 69, 138, 0.15);
+    transform: translateY(-2px); /* Pequeño salto al enfocar */
+}
+
+.btn-login {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 69, 138, 0.3), 0 2px 4px -1px rgba(0, 69, 138, 0.1);
+    margin-top: 10px;
+}
+.btn-login:hover {
+    box-shadow: 0 12px 20px -5px rgba(0, 69, 138, 0.4);
+    transform: translateY(-2px);
+}
+.btn-login:active {
+    transform: translateY(1px);
+}
+
+.error-msg {
+    background: #fef2f2;
+    color: #ef4444;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    border: 1px solid #fecaca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+/* =========================================
+   FIN DE PANTALLA DE LOGIN
+   ========================================= */
+
+/* =========================================
+   PANTALLA DEL PANEL (DASHBOARD)
+   ========================================= */
+.bg-dashboard {
+    /* Fondo muy limpio en tonos azul grisáceo clarito */
+    background: linear-gradient(135deg, #f0f6fa 0%, #dbe9f4 100%);
+    padding: 40px 20px;
+    min-height: 100vh; 
+}
+.dashboard-container {
+    max-width: 1100px;
+    margin: auto;
+    background: var(--card-bg);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Header del Panel */
+.header-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 30px;
+}
+.header-panel h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+}
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.user-badge {
+    background: #e0e7ff; /* Puedes ajustar este si quieres que combine más, pero como acento funciona bien */
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.logout-btn {
+    color: var(--danger);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+.logout-btn:hover { background: #fee2e2; }
+
+/* Alertas */
+.alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+/* Formularios y Secciones */
+h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+.ruta-container { 
+    display: flex; 
+    gap: 20px; 
+    margin-bottom: 30px; 
+    flex-wrap: wrap; 
+}
+.ruta-container > div { flex: 1; min-width: 250px; }
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+select, input[type="text"], input[type="file"] { 
+    width: 100%; 
+    padding: 10px 14px; 
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box; 
+    border-radius: 8px; 
+    border: 1px solid var(--border-color);
+    background-color: #f8fafc;
+    transition: all 0.2s;
+}
+select:focus, input[type="text"]:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 69, 138, 0.1);
+    background-color: #fff;
+}
+
+.user-fixed-area {
+    padding: 10px 14px; 
+    background: #f1f5f9; 
+    border-radius: 8px; 
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Botones */
+.btn {
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: 600;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-cargar { background: var(--primary); color: white; }
+.btn-cargar:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 69, 138, 0.2); }
+.btn-herramienta { background: var(--secondary); color: white; margin-bottom: 20px; }
+.btn-herramienta:hover { background: var(--secondary-hover); }
+.btn-cancelar { background: white; color: var(--text-main); border: 1px solid var(--border-color); display:none; }
+.btn-cancelar:hover { background: #f1f5f9; }
+
+/* Drag & Drop */
+#drop-area { 
+    border: 2px dashed #cbd5e1; 
+    padding: 50px 20px; 
+    text-align: center; 
+    background: #f8fafc; 
+    border-radius: 12px; 
+    cursor: pointer; 
+    margin-bottom: 20px; 
+    transition: all 0.3s ease; 
+}
+#drop-area:hover, #drop-area.highlight { 
+    background-color: #e6f0f9; 
+    border-color: var(--primary); 
+    transform: translateY(-2px);
+}
+#drop-area p:first-child {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 8px 0;
+}
+#drop-area p.sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Filtro Card */
+.filtro-card {
+    background: #f8fafc;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid var(--border-color);
+}
+.filtro-card label { margin: 0; }
+.filtro-card select { width: 220px; margin: 0; }
+.filtro-card .btn { padding: 9px 16px; }
+
+/* Tabla */
+.tabla-contenedor {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+.tabla-archivos { 
+    width: 100%; 
+    border-collapse: collapse; 
+    font-size: 14px; 
+    background: white;
+}
+.tabla-archivos th, .tabla-archivos td { 
+    padding: 14px 16px; 
+    border-bottom: 1px solid var(--border-color); 
+    text-align: left; 
+    vertical-align: middle; 
+}
+.tabla-archivos th { 
+    background: #f8fafc;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+.tabla-archivos tbody tr { transition: background 0.2s; }
+.tabla-archivos tbody tr:hover { background: #f1f5f9; }
+.tabla-archivos tbody tr:last-child td { border-bottom: none; }
+
+.checkbox-excel { 
+    transform: scale(1.2); 
+    cursor: pointer; 
+    accent-color: var(--primary);
+}
+
+.td-ruta { color: var(--text-muted); font-size: 13px; }
+.badge-user {
+    background: #e2e8f0; 
+    color: #475569; 
+    padding: 4px 10px; 
+    border-radius: 20px; 
+    font-weight: 600; 
+    font-size: 12px;
+}
+
+/* Iconos de Acción */
+.acciones-flex { display: flex; gap: 8px; justify-content: flex-end; align-items: center; }
+.btn-icono { 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 34px; 
+    height: 34px; 
+    border-radius: 8px; 
+    border: none; 
+    cursor: pointer; 
+    text-decoration: none; 
+    font-size: 16px; 
+    transition: all 0.2s; 
+}
+.btn-ver { background: #e6f0f9; color: var(--primary); }
+.btn-ver:hover { background: #cce0f5; transform: scale(1.05); }
+.btn-copiar { background: #dcfce7; color: #15803d; }
+.btn-copiar:hover { background: #bbf7d0; transform: scale(1.05); }
+.btn-borrar { background: #fee2e2; color: #b91c1c; }
+.btn-borrar:hover { background: #fecaca; transform: scale(1.05); }
+
+/* =========================================
+   NOTIFICACIONES FLOTANTES (TOAST)
+   ========================================= */
+.toast-mensaje {
+    visibility: hidden;
+    min-width: 280px;
+    background-color: #10b981; /* Verde de éxito */
+    color: #ffffff;
+    text-align: center;
+    border-radius: 12px;
+    padding: 16px 20px;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%) translateY(20px);
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4), 0 8px 10px -6px rgba(16, 185, 129, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.toast-mensaje.mostrar {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+/* =========================================
+   FOOTER DE CRÉDITOS (LOGIN)
+   ========================================= */
+.footer-creditos {
+    position: fixed;
+    bottom: 20px;
+    left: 25px;
+    color: rgba(255, 255, 255, 0.6); /* Blanco semitransparente para no distraer */
+    font-size: 13px;
+    font-weight: 400;
+    z-index: 10;
+    letter-spacing: 0.3px;
+}
+
+.footer-creditos a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin: 0 4px;
+}
+
+.footer-creditos a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4); /* Pequeño brillo al pasar el mouse */
+}
