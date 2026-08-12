@@ -466,3 +466,16 @@ select:focus, input[type="text"]:focus {
     text-decoration: underline;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.4); /* Pequeño brillo al pasar el mouse */
 }
+/* =========================================
+   DERECHOS RESERVADOS (LOGIN)
+   ========================================= */
+.footer-derechos {
+    position: fixed;
+    bottom: 20px;
+    right: 25px;
+    color: rgba(255, 255, 255, 0.6); /* Mismo blanco semitransparente */
+    font-size: 13px;
+    font-weight: 400;
+    z-index: 10;
+    letter-spacing: 0.3px;
+}

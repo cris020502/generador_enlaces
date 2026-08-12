@@ -67,7 +67,10 @@ if (!isset($_SESSION['usuario_logeado'])) {
         <div class="footer-creditos">
             Realizado por: 
             <a href="https://github.com/kevingiu7" target="_blank">Kevin Giussepe</a> & 
-            <a href="https://github.com/otro-usuario" target="_blank">Compañero</a>
+            <a href="https://github.com/cris020502" target="_blank">Cristopher Vargas</a>
+        </div>
+        <div class="footer-derechos">
+            &copy; 2026 INFRUSCH Consultores. Todos los derechos reservados.
         </div>
     </body>
     </html>
