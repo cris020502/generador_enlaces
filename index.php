@@ -6,25 +6,26 @@ $password = ""; // Tu contraseña local
 $dbname = "bd_gestor_documental";
 
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
     die("Error de conexión: " . $e->getMessage());
 }
 
-// --- 1. SISTEMA DE USUARIOS Y ROLES CON BD ---
+// --- 1. SISTEMA DE USUARIOS Y ROLES CON BD (BCRYPT + VERIFY) ---
 if (isset($_POST['btn_login'])) {
     $user_ingresado = strtolower(trim($_POST['usuario']));
     $pass_ingresado = trim($_POST['password']);
 
     try {
-        $stmt = $conn->prepare("SELECT rol, password FROM usuarios WHERE username = ? LIMIT 1");
+        $stmt = $conn->prepare("SELECT id, username, password, rol, id_area FROM usuarios WHERE username = ? LIMIT 1");
         $stmt->execute([$user_ingresado]);
         $usuario_db = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($usuario_db && $usuario_db['password'] === $pass_ingresado) {
-            $_SESSION['usuario_logeado'] = $user_ingresado;
+        if ($usuario_db && (password_verify($pass_ingresado, $usuario_db['password']) || $usuario_db['password'] === $pass_ingresado)) {
+            $_SESSION['usuario_logeado'] = $usuario_db['username'];
             $_SESSION['es_admin'] = ($usuario_db['rol'] === 'admin');
+            $_SESSION['id_area'] = $usuario_db['id_area'];
         } else {
             $error_login = "Usuario o contraseña incorrectos.";
         }
@@ -52,7 +53,7 @@ if (!isset($_SESSION['usuario_logeado'])) {
     </head>
     <body class="bg-login">
         <div class="login-container">
-<img src="logos/logo_infrusch.jpeg" alt="Logo INFRUSCH Consultores" class="login-logo" onerror="this.style.display='none'" style="max-width: 220px;">            
+            <img src="logos/logo_infrusch.jpeg" alt="Logo INFRUSCH Consultores" class="login-logo" onerror="this.style.display='none'" style="max-width: 220px;">            
             <h2>Acceso Restringido</h2>
             <p>Ingrese sus credenciales para acceder a la plataforma documental</p>
             
@@ -298,16 +299,16 @@ if (isset($_POST['btn_eliminar'])) {
     exit;
 }
 
-// --- 5. EXPORTAR REPORTE EXCEL ---
+// --- 5. EXPORTAR REPORTE EXCEL INFALIBLE ---
 if (isset($_POST['btn_descargar_excel_seleccion'])) {
     if (!empty($_POST['archivos_seleccionados'])) {
-        $nombreArchivo = 'Reporte_Seleccionado_' . date('Y-m-d') . '.xls'; 
+        $nombreArchivo = 'Reporte_Documental_' . date('Y-m-d_H-i') . '.xls'; 
         header('Content-Type: application/vnd.ms-excel; charset=utf-8');
         header('Content-Disposition: attachment;filename="' . $nombreArchivo . '"');
         echo '<meta charset="utf-8">';
         echo '<table border="1">';
         echo '<tr style="background-color: #4f46e5; color: white; font-weight: bold;">';
-        echo '<th>ID</th><th>Nombre del Documento</th><th>Ruta Interna</th><th>Subido por</th><th>Fecha</th><th>Enlace Directo</th>';
+        echo '<th>ID</th><th>Nombre del Documento</th><th>Ruta Interna</th><th>Subido por</th><th>Fecha y Hora</th><th>Enlace Directo</th>';
         echo '</tr>';
         
         $id = 1;
@@ -315,23 +316,24 @@ if (isset($_POST['btn_descargar_excel_seleccion'])) {
         $directorio_base = rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/';
         $dominio_base = $protocolo . $_SERVER['HTTP_HOST'] . $directorio_base;
         
-        foreach ($_POST['archivos_seleccionados'] as $ruta_relativa) {
+        foreach ($_POST['archivos_seleccionados'] as $ruta_raw) {
+            $ruta_relativa = urldecode(trim($ruta_raw));
             $nombreArch = basename($ruta_relativa);
             $ruta_para_mostrar = str_replace($carpeta_base, '', dirname($ruta_relativa)); 
             $url_completa = $dominio_base . $ruta_relativa;
             
             $creador = "Desconocido"; 
             try {
-                $stmt_ex = $conn->prepare("SELECT usuario FROM bitacora WHERE archivo = ? LIMIT 1");
+                $stmt_ex = $conn->prepare("SELECT usuario FROM bitacora WHERE archivo = ? ORDER BY id DESC LIMIT 1");
                 $stmt_ex->execute([$nombreArch]);
                 $res_ex = $stmt_ex->fetch(PDO::FETCH_ASSOC);
                 if ($res_ex) $creador = $res_ex['usuario'];
             } catch (PDOException $e) { }
             
-            $fecha_arch = date('d/m/Y H:i', filemtime($ruta_relativa));
+            $fecha_arch = file_exists($ruta_relativa) ? date('d/m/Y H:i', filemtime($ruta_relativa)) : date('d/m/Y H:i');
             
             echo '<tr>';
-            echo "<td>$id</td><td>$nombreArch</td><td>$ruta_para_mostrar</td><td>$creador</td><td>$fecha_arch</td>";
+            echo "<td>$id</td><td>" . htmlspecialchars($nombreArch) . "</td><td>" . htmlspecialchars($ruta_para_mostrar) . "</td><td>" . htmlspecialchars($creador) . "</td><td>$fecha_arch</td>";
             echo "<td><a href=\"$url_completa\">$url_completa</a></td>";
             echo '</tr>';
             $id++;
@@ -360,7 +362,7 @@ if (is_dir($carpeta_base)) {
             
             $creador_db = "Desconocido";
             try {
-                $stmt_creador = $conn->prepare("SELECT usuario FROM bitacora WHERE archivo = ? LIMIT 1");
+                $stmt_creador = $conn->prepare("SELECT usuario FROM bitacora WHERE archivo = ? ORDER BY id DESC LIMIT 1");
                 $stmt_creador->execute([$nombre_archivo_actual]);
                 $resultado = $stmt_creador->fetch(PDO::FETCH_ASSOC);
                 if ($resultado) $creador_db = $resultado['usuario'];
@@ -400,7 +402,6 @@ if (is_dir($carpeta_base)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Documental</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Enlace al archivo CSS externo -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-dashboard">
@@ -408,6 +409,9 @@ if (is_dir($carpeta_base)) {
         <div class="header-panel">
             <h2>Panel Documental</h2>
             <div class="user-controls">
+                <?php if ($es_admin): ?>
+                    <a href="usuarios.php" class="btn btn-cargar" style="text-decoration:none; background:#4f46e5;">⚙️ Gestionar Usuarios</a>
+                <?php endif; ?>
                 <div class="user-badge">
                     <span>👤</span> <?= strtoupper($usuario_actual) ?>
                 </div>
@@ -503,7 +507,7 @@ if (is_dir($carpeta_base)) {
                             <th>Documento</th>
                             <th>Ruta en Repositorio</th>
                             <th>Subido por</th>
-                            <th>Fecha</th>
+                            <th>Fecha y Hora</th>
                             <th style="text-align: right;">Acciones</th>
                         </tr>
                     </thead>
@@ -527,7 +531,7 @@ if (is_dir($carpeta_base)) {
                             <td><b style="color: var(--text-main);"><?= htmlspecialchars($archivo['nombre']) ?></b></td>
                             <td class="td-ruta"><?= htmlspecialchars($ruta_mostrar) ?></td>
                             <td><span class="badge-user"><?= htmlspecialchars($archivo['creador']) ?></span></td>
-                            <td style="color: var(--text-muted); font-size: 13px;"><?= date('d/m/Y', $archivo['fecha']) ?></td>
+                            <td style="color: var(--text-muted); font-size: 13px;"><?= date('d/m/Y H:i', $archivo['fecha']) ?></td>
                             <td>
                                 <div class="acciones-flex">
                                     <a href="<?= htmlspecialchars($archivo['ruta']) ?>" target="_blank" class="btn-icono btn-ver" title="Ver Documento">👁️</a>
@@ -565,7 +569,6 @@ if (is_dir($carpeta_base)) {
             });
         }
 
-        // --- FUNCIONES DRAG & DROP MEJORADAS ---
         const dropArea = document.getElementById('drop-area');
         const inputFile = document.getElementById('archivos');
         const txtSeleccion = document.getElementById('txtSeleccion');
