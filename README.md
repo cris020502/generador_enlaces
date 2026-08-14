@@ -22,7 +22,7 @@ Plataforma web desarrollada en PHP orientada a la digitalización, almacenamient
 
 1. Clonar el repositorio en el directorio del servidor web (ej. `htdocs` o `www`).
 2. La carpeta `repositorio_oficial/` debe tener permisos de escritura (CHMOD 0755).
-3. Importar el archivo `bd_vacia.sql` en el gestor de base de datos (phpMyAdmin). Este script creará la estructura relacional y un usuario maestro.
+3. Importar el archivo `bd_gestor_documental.sql` en el gestor de base de datos (phpMyAdmin). Este script creará la estructura relacional y un usuario maestro.
 4. (Opcional) Ajustar las credenciales de base de datos en los archivos `.php` si el entorno local tiene un usuario distinto a `root` sin contraseña.
 
 ##  Credenciales de Acceso por Defecto
