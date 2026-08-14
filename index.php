@@ -1,16 +1,7 @@
 <?php
 session_start();
-$servername = "localhost:3306";
-$username = "root";
-$password = ""; // Tu contraseña local
-$dbname = "bd_gestor_documental";
+require_once 'conexion.php';
 
-try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
-}
 
 // --- 1. SISTEMA DE USUARIOS Y ROLES CON BD (BCRYPT + VERIFY) ---
 if (isset($_POST['btn_login'])) {

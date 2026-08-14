@@ -1,16 +1,6 @@
 <?php
 session_start();
-$servername = "localhost:3306";
-$username = "root";
-$password = ""; // Tu contraseña local
-$dbname = "bd_gestor_documental";
-
-try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
-}
+require_once 'conexion.php';
 
 // Control de acceso: Solo administradores logeados
 if (!isset($_SESSION['usuario_logeado']) || !$_SESSION['es_admin']) {
@@ -100,7 +90,7 @@ $areas = $conn->query("SELECT * FROM areas ORDER BY id DESC")->fetchAll(PDO::FET
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Áreas</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body class="bg-dashboard">
     <div class="dashboard-container">
@@ -186,19 +176,21 @@ $areas = $conn->query("SELECT * FROM areas ORDER BY id DESC")->fetchAll(PDO::FET
                 <h3>Renombrar Área</h3>
                 <button type="button" class="close-btn" onclick="cerrarModal()">&times;</button>
             </div>
-            <form method="POST">
+            <form method="POST" id="formEditarArea" onsubmit="return confirmarEdicionArea();">
                 <input type="hidden" name="edit_id" id="e_id">
                 
-                <label>Nuevo Nombre Visible</label>
-                <input type="text" name="edit_nom" id="e_nom" required style="margin-bottom:15px;">
+                <div class="form-group-modal">
+                    <label for="e_nom">Nuevo Nombre Visible</label>
+                    <input type="text" name="edit_nom" id="e_nom" required>
+                </div>
                 
                 <div class="alert alert-warning" style="font-size:12px; margin-bottom:15px; padding:10px;">
                     ℹ️ La ruta física de la carpeta no se modificará para asegurar la persistencia de los hipervínculos generados.
                 </div>
                 
-                <div style="text-align:right;">
-                    <button type="button" class="btn btn-cancelar" style="display:inline-block; background:#64748b;" onclick="cerrarModal()">Cancelar</button>
-                    <button type="submit" name="btn_editar" class="btn btn-cargar">Actualizar Nombre</button>
+                <div class="modal-actions">
+                    <button type="button" class="btn-modal-cancel" onclick="cerrarModal()">Cancelar</button>
+                    <button type="submit" name="btn_editar" class="btn-modal-save">Actualizar Nombre</button>
                 </div>
             </form>
         </div>
@@ -213,6 +205,20 @@ $areas = $conn->query("SELECT * FROM areas ORDER BY id DESC")->fetchAll(PDO::FET
 
         function cerrarModal() {
             document.getElementById('mEdit').style.display = 'none';
+        }
+
+        // Cierre al hacer clic fuera del modal
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('mEdit');
+            if (e.target === modal) {
+                cerrarModal();
+            }
+        });
+
+        // Alerta de confirmación previa
+        function confirmarEdicionArea() {
+            const nuevoNombre = document.getElementById('e_nom').value.trim();
+            return confirm(`¿Confirmas que deseas cambiar el nombre visible del área a "${nuevoNombre}"?`);
         }
     </script>
 </body>
